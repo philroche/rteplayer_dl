@@ -1,0 +1,5 @@
+bs4
+Click>=6.0
+lxml
+requests
+youtube_dl
