@@ -50,13 +50,20 @@ def download(video_xml, video_directory, video_source='mp4', debug=False):
         for video_element in video_elements:
             _filename = video_element.attrs['href']
             _components = _filename.split('_')
-            resolution_determining_component = _components[0]
-            _components = resolution_determining_component.split('-')
-            resolution_determining_component = int(_components[1])
-            if not highest_resolution_ismv or \
-                    resolution_determining_component > highest_resolution_ismv:
-                highest_resolution_ismv = resolution_determining_component
-                video_filename = _filename
+            try:
+                resolution_determining_component = _components[0]
+                _components = resolution_determining_component.split('-')
+                resolution_determining_component = int(_components[1])
+                if not highest_resolution_ismv or \
+                        resolution_determining_component > \
+                        highest_resolution_ismv:
+                    highest_resolution_ismv = resolution_determining_component
+                    video_filename = _filename
+            except IndexError:
+                # I have found that some lists of ismv files do not conform
+                # to the same filename pattern. As such  -
+                # just ignore those that don't conform.
+                pass
     else:
         video_element = video_elements[0]
         video_filename = video_element.attrs['href']
