@@ -8,7 +8,6 @@ Welcome to RTE Player video downloader's documentation!
    readme
    installation
    usage
-   modules
    contributing
    authors
    history
