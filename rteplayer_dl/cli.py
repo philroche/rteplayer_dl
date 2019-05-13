@@ -4,7 +4,7 @@
 import sys
 import click
 
-from .rteplayer_dl import download
+from rteplayer_dl.rteplayer import download
 
 
 @click.command()
