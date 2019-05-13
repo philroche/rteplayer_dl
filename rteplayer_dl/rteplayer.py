@@ -85,7 +85,9 @@ def download(video_xml, video_directory, video_source='mp4', debug=False):
             mp4_video_path = "{}.mp4".format(video_title)
             mp4_video_path = os.path.join(video_directory, mp4_video_path)
             stream = ffmpeg.input(video_local_path)
-            stream = ffmpeg.output(stream, mp4_video_path)
+            stream = ffmpeg.output(stream, mp4_video_path,
+                                   vcodec='copy',
+                                   acodec='copy')
             stream = ffmpeg.overwrite_output(stream)
             ffmpeg.run(stream)
             if debug:
