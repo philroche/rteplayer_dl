@@ -7,7 +7,7 @@
 import unittest
 from click.testing import CliRunner
 
-from rteplayer_dl import rteplayer_dl
+from rteplayer_dl import rteplayer
 from rteplayer_dl import cli
 
 
