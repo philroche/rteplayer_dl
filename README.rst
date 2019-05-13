@@ -27,6 +27,11 @@ from RTE player for offline viewing.
 * Free software: MIT license
 * Documentation: https://rteplayer-dl.readthedocs.io.
 
+Known issues
+------------
+
+* Programmes with run time greater than 1 hour are not playable past the fist
+  hour. The reason for this is not yet known.
 
 Features
 --------
