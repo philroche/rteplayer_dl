@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """The setup script."""
-import os
 from setuptools import setup, find_packages
 from pip._internal.req import parse_requirements
 

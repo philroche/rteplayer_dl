@@ -1,5 +1,6 @@
 bs4
 Click>=6.0
+ffmpeg-python
 lxml
 requests
 youtube_dl

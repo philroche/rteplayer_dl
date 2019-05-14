@@ -4,7 +4,7 @@
 import sys
 import click
 
-from .rteplayer_dl import download
+from rteplayer_dl.rteplayer import download
 
 
 @click.command()
@@ -15,11 +15,16 @@ from .rteplayer_dl import download
               required=False,
               help="Where should downloaded videos be saved?",
               type=click.Path(exists=True), default=None)
+@click.option('--video-source', type=click.Choice(['mp4', 'ismv']),
+              required=False,
+              help='Use ismv (much larger download but higher resolution) or '
+                   'mp4 as the video source',
+              default='mp4')
 @click.option('--debug', is_flag=True, default=False,
               help='Print debug output')
-def main(video_xml, video_directory, debug):
+def main(video_xml, video_directory, video_source, debug):
     """Console script for rteplayer_dl."""
-    download(video_xml, video_directory, debug)
+    download(video_xml, video_directory, video_source, debug)
     return 0
 
 
