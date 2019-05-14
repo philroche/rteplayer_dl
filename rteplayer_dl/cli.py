@@ -20,11 +20,13 @@ from rteplayer_dl.rteplayer import download
               help='Use ismv (much larger download but higher resolution) or '
                    'mp4 as the video source',
               default='mp4')
+@click.option('--overwrite', is_flag=True, default=False,
+              help='Overwrite existing files with same name')
 @click.option('--debug', is_flag=True, default=False,
               help='Print debug output')
-def main(video_xml, video_directory, video_source, debug):
+def main(video_xml, video_directory, video_source, overwrite, debug):
     """Console script for rteplayer_dl."""
-    download(video_xml, video_directory, video_source, debug)
+    download(video_xml, video_directory, video_source, overwrite, debug)
     return 0
 
 

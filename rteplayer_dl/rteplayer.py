@@ -10,7 +10,9 @@ import youtube_dl
 from rteplayer_dl.lib import findnth
 
 
-def download(video_xml, video_directory, video_source='mp4', debug=False):
+def download(video_xml, video_directory, video_source='mp4', overwrite=False,
+             debug=False):
+
     if debug:
         print("downloading {} ...".format(video_xml))
     r = requests.get(video_xml, allow_redirects=True)
@@ -85,9 +87,16 @@ def download(video_xml, video_directory, video_source='mp4', debug=False):
 
     video_local_path = "{}.{}".format(video_title, video_source)
 
+   mp4_video_path = "{}.mp4".format(video_title)
     if video_directory:
         video_local_path = os.path.join(video_directory, video_local_path)
+        mp4_video_path = os.path.join(video_directory, mp4_video_path)
 
+    mp4_exists = os.path.isfile(mp4_video_path)
+    if not overwrite and mp4_exists:
+        print("{} already exists. Pass `--overwrite` to force download."
+              .format(mp4_video_path))
+        sys.exit(0)
     ydl = youtube_dl.YoutubeDL({'outtmpl': video_local_path})
     if debug:
         print("downloading mp4 video using youtube-dl ...")
@@ -99,8 +108,6 @@ def download(video_xml, video_directory, video_source='mp4', debug=False):
             if debug:
                 print("Converting from ismv to mp4 using ffmpeg ...")
             # Convert to mp4 from ismv
-            mp4_video_path = "{}.mp4".format(video_title)
-            mp4_video_path = os.path.join(video_directory, mp4_video_path)
             stream = ffmpeg.input(video_local_path)
             stream = ffmpeg.output(stream, mp4_video_path,
                                    vcodec='copy',
