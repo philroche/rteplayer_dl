@@ -13,19 +13,14 @@ RTE Player video downloader
         :target: https://rteplayer-dl.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
-
-
 Helpful python project to download videos from RTE Player.
-
 
 Uses a combination of a bookmarklet and a python script to download programmes
 from RTE player for offline viewing.
 
-:doc:`See documentation on usage for more details. <usage>`
-
 * Free software: MIT license
 * Documentation: https://rteplayer-dl.readthedocs.io.
+* Usage: https://rteplayer-dl.readthedocs.io/en/latest/usage.html
 
 Known issues
 ------------
