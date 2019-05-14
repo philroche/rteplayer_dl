@@ -4,6 +4,8 @@
 import os
 import re
 import requests
+import signal
+import sys
 from bs4 import BeautifulSoup
 import ffmpeg
 import youtube_dl
@@ -14,6 +16,7 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
              debug=False):
 
     if debug:
+        print('Press Ctrl+C to cancel downloads.')
         print("downloading {} ...".format(video_xml))
     r = requests.get(video_xml, allow_redirects=True)
 
@@ -86,8 +89,7 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
         print("video url = {}".format(abs_video_url))
 
     video_local_path = "{}.{}".format(video_title, video_source)
-
-   mp4_video_path = "{}.mp4".format(video_title)
+    mp4_video_path = "{}.mp4".format(video_title)
     if video_directory:
         video_local_path = os.path.join(video_directory, video_local_path)
         mp4_video_path = os.path.join(video_directory, mp4_video_path)
@@ -97,6 +99,18 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
         print("{} already exists. Pass `--overwrite` to force download."
               .format(mp4_video_path))
         sys.exit(0)
+
+    def download_signal_handler(sig, frame):
+        print('')
+        print('You have cancelled all downloads.')
+        print('Cleaning up any partial downloads...')
+        partial_download_path = '{}.part'.format(video_local_path)
+        os.remove(partial_download_path)
+        print('Cleaning up complete.')
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, download_signal_handler)
+
     ydl = youtube_dl.YoutubeDL({'outtmpl': video_local_path})
     if debug:
         print("downloading mp4 video using youtube-dl ...")
