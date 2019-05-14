@@ -2,6 +2,7 @@
 
 """Main module."""
 import os
+import re
 import requests
 from bs4 import BeautifulSoup
 import ffmpeg
@@ -46,24 +47,33 @@ def download(video_xml, video_directory, video_source='mp4', debug=False):
         # res streeam is that with the highest second component of the
         # filename.
         video_filename = None
-        highest_resolution_ismv = None
+        highest_resolution_video = None
         for video_element in video_elements:
             _filename = video_element.attrs['href']
-            _components = _filename.split('_')
-            try:
-                resolution_determining_component = _components[0]
-                _components = resolution_determining_component.split('-')
-                resolution_determining_component = int(_components[1])
-                if not highest_resolution_ismv or \
-                        resolution_determining_component > \
-                        highest_resolution_ismv:
-                    highest_resolution_ismv = resolution_determining_component
-                    video_filename = _filename
-            except IndexError:
+            # Example filename:
+            # IP000061389-1556476261769_5d0f3ed8cf714b4a82c2d0f968c7c1d0.ismv
+            resolution_identifier_regex = \
+                re.compile(r'-(?P<resolution_identifier>[\d]+?)_')
+
+            resolution_identifier_matches = resolution_identifier_regex.search(
+                _filename)
+            if resolution_identifier_matches:
+                resolution_identifier = int(
+                    resolution_identifier_matches.group(
+                        'resolution_identifier'
+                    ))
+            else:
                 # I have found that some lists of ismv files do not conform
                 # to the same filename pattern. As such  -
                 # just ignore those that don't conform.
-                pass
+                resolution_identifier = 0
+
+            if not highest_resolution_video or \
+                    resolution_identifier > \
+                    highest_resolution_video:
+                highest_resolution_video = resolution_identifier
+                video_filename = _filename
+
     else:
         video_element = video_elements[0]
         video_filename = video_element.attrs['href']
