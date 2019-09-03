@@ -23,6 +23,7 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
     if debug:
         print("parsing video index URL and video title from XML ...")
     video_embed_xml = BeautifulSoup(r.content, 'lxml')
+
     video_index_url = video_embed_xml.find_all('video')[0].get('src')
     video_index_url_base_index = findnth(video_index_url, "/", 8)
     base_index_url = '{}/'.format(video_index_url[:video_index_url_base_index])
@@ -33,7 +34,7 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
                                                in tag.attrs['name'])
     video_title = video_title_element.attrs['content']
     if debug:
-        print("video title = {}".format(video_title))
+        print(u"video title = {}".format(video_title))
 
     if debug:
         print("downloading html from video index ...")
@@ -88,8 +89,8 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
     if debug:
         print("video url = {}".format(abs_video_url))
 
-    video_local_path = "{}.{}".format(video_title, video_source)
-    mp4_video_path = "{}.mp4".format(video_title)
+    video_local_path = u"{}.{}".format(video_title, video_source)
+    mp4_video_path = u"{}.mp4".format(video_title)
     if video_directory:
         video_local_path = os.path.join(video_directory, video_local_path)
         mp4_video_path = os.path.join(video_directory, mp4_video_path)
