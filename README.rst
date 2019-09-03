@@ -25,8 +25,9 @@ from RTE player for offline viewing.
 Known issues
 ------------
 
-* Programmes with run time greater than 1 hour are not playable past the fist
-  hour. The reason for this is not yet known.
+* Programmes with run time greater than 1 hour are not watchable past the fist
+  hour due to audio and video stream no longer being in sync. The reason for
+  this is not yet known.
 * Some downloaded videos contain multiple video tracks of different resolution.
   From my experimentation the last video track is the highest resolution.
 
