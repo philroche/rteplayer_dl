@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Main module."""
+from collections import OrderedDict
 import os
 import re
 import requests
@@ -9,11 +10,11 @@ import sys
 from bs4 import BeautifulSoup
 import ffmpeg
 import youtube_dl
-from rteplayer_dl.lib import findnth
+from rteplayer_dl.lib import findnth, VIDEO_RESOLUTIONS
 
 
 def download(video_xml, video_directory, video_source='mp4', overwrite=False,
-             debug=False):
+             debug=False, resolution='high'):
 
     if debug:
         print('Press Ctrl+C to cancel downloads.')
@@ -26,6 +27,9 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
 
     video_index_url = video_embed_xml.find_all('video')[0].get('src')
     video_index_url_base_index = findnth(video_index_url, "/", 8)
+    # Transform full XML source URL to video URL
+    # (like https://vod.rte.ie/rte/vod/RTE_Prod_-_Prod/723/248/AQ000266244/)
+    # which can be downloaded and parsed.
     base_index_url = '{}/'.format(video_index_url[:video_index_url_base_index])
     if debug:
         print("video index URL = {}".format(base_index_url))
@@ -48,12 +52,11 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
                                                in tag.attrs['href'])
 
     if len(video_elements) > 1:
-        # find the highest resolution file to download.
+        # find all resolution of video to download.
         # I have determined that if there are multiple ismvs then the highest
-        # res streeam is that with the highest second component of the
+        # res stream is that with the highest second component of the
         # filename.
-        video_filename = None
-        highest_resolution_video = None
+        videos_by_resolution = {}
         for video_element in video_elements:
             _filename = video_element.attrs['href']
             # Example filename:
@@ -73,13 +76,31 @@ def download(video_xml, video_directory, video_source='mp4', overwrite=False,
                 # to the same filename pattern. As such  -
                 # just ignore those that don't conform.
                 resolution_identifier = 0
+            videos_by_resolution[resolution_identifier] = _filename
 
-            if not highest_resolution_video or \
-                    resolution_identifier > \
-                    highest_resolution_video:
-                highest_resolution_video = resolution_identifier
-                video_filename = _filename
+        ordered_videos_by_resolution = OrderedDict(
+            sorted(videos_by_resolution.items()))
 
+        resolution_index = VIDEO_RESOLUTIONS.index(resolution) + 1
+
+        ordered_videos_by_resolution_keys = list(
+            ordered_videos_by_resolution.keys())
+        try:
+            resolution_identifier_by_index = ordered_videos_by_resolution_keys[
+                -resolution_index]
+            video_filename = ordered_videos_by_resolution[
+                resolution_identifier_by_index]
+            if debug:
+                print("downloading {} resolution = {}".format(resolution,
+                                                          video_filename))
+        except IndexError as index_error:
+            if debug:
+                print("The chosen {} resolution was not available. "
+                      "Falling back to highest resolution".format(resolution))
+            resolution_identifier_by_index = ordered_videos_by_resolution_keys[
+                -1]
+            video_filename = ordered_videos_by_resolution[
+                resolution_identifier_by_index]
     else:
         video_element = video_elements[0]
         video_filename = video_element.attrs['href']

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+VIDEO_RESOLUTIONS = ['highest', 'high', 'medium', 'low']
+
 
 def findnth(haystack, needle, n):
     '''
