@@ -45,11 +45,11 @@ from rteplayer_dl.lib import VIDEO_RESOLUTIONS
     help="It is unknown what the actual resolution of the RTE downloads will "
     "be but we can choose which to download based on the resolution_"
     "identifier found in the video filenames. From my testing:"
-    "highest ~= 1080p"
-    "high ~=720p"
-    "medium ~=540p"
-    "low ~= 432p"
-    "The default is set to high.",
+    " - highest ~= 1080p"
+    " - high ~=720p"
+    " - medium ~=540p"
+    " - low ~= 432p"
+    " The default is set to high.",
 )
 def main(video_xml, video_directory, video_source, overwrite, debug, resolution):
     """Console script for rteplayer_dl."""
