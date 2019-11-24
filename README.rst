@@ -3,6 +3,10 @@ RTE Player video downloader
 ===========================
 
 
+******
+20191122 - No longer working - see issue https://github.com/philroche/rteplayer_dl/issues/6
+******
+
 .. image:: https://img.shields.io/pypi/v/rteplayer_dl.svg
         :target: https://pypi.python.org/pypi/rteplayer_dl
 
